@@ -1,14 +1,40 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <title>index</title>
-    <link rel='stylesheet' href='/css/style.css'/>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+        }
+
+        #root {
+            width: 50%;
+            margin: auto;
+        }
+    </style>
+
+    <title>Hello, world!</title>
 </head>
 <body>
-<h1>index</h1>
-<p>Inicia sesion</p>
-<div id='root' ></div>
 
+<div id="root"></div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="/js/jquery.3.3.1.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
 <script src="/js/common.bundle.js"></script>
 <script src="/js/login.bundle.js"></script>
 </body>
