@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.99.100:3306/mreal
+    username: root
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+
+jwt:
+  header: Authorization
+  secret: mySecret
+  expiration: 604800
+  routeAuthenticationPath: /auth
+  routeAuthenticationRefresh: /refresh
+
