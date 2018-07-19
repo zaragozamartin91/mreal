@@ -40,6 +40,7 @@ public class LoginController {
             return modelAndView;
         } else {
             ModelAndView modelAndView = new ModelAndView("index");
+
             return modelAndView;
         }
     }
