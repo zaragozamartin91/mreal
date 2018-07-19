@@ -3,7 +3,7 @@ package com.mz.mreal.controller.auth;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 
-import com.mz.mreal.config.security.JwtTokenUtil;
+import com.mz.mreal.util.jwt.JwtTokenUtil;
 import com.mz.mreal.config.security.JwtUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

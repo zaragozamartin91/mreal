@@ -2,8 +2,12 @@
 <html lang="en">
 <head>
     <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <#if message??>
+        <meta name="message" content="${message}" />
+    </#if>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
@@ -25,7 +29,7 @@
         }
     </style>
 
-    <title>Hello, world!</title>
+    <title>Login</title>
 </head>
 <body>
 

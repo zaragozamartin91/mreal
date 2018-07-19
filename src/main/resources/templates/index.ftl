@@ -1,15 +1,24 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <title>index</title>
-    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+
+    <title>Hello, world!</title>
 </head>
 <body>
-<h1>index</h1>
-<p>Welcome to <%= title %></p>
-<div id='root' page="index"></div>
 
-<script src="js/common.bundle.js"></script>
-<script src="js/index.bundle.js"></script>
+<div id="root"></div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="/js/jquery.3.3.1.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/common.bundle.js"></script>
+<script src="/js/index.bundle.js"></script>
 </body>
 </html>
