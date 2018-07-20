@@ -1,7 +1,12 @@
 package com.mz.mreal.config.security;
+
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,10 +50,26 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             } catch (IllegalArgumentException e) {
                 logger.error("an error occured during getting username from token", e);
             } catch (ExpiredJwtException e) {
-                logger.warn("the token is expired and not valid anymore", e);
+                logger.warn("El token ya no es valido", e);
             }
         } else {
-            logger.warn("couldn't find bearer string, will ignore the header");
+            logger.warn("No se encontraron tokens en el encabezado de autenticacion");
+        }
+
+        Cookie[] cookiesArr = request.getCookies() == null ? new Cookie[]{} : request.getCookies();
+        List<Cookie> cookies = Arrays.asList(cookiesArr);
+        Optional<Cookie> tokenCookie = cookies.stream().filter(cookie -> "token".equalsIgnoreCase(cookie.getName())).findFirst();
+        if (tokenCookie.isPresent()) {
+            authToken = tokenCookie.get().getValue();
+            try {
+                username = jwtTokenUtil.getUsernameFromToken(authToken);
+            } catch (IllegalArgumentException e) {
+                logger.error("Ocurrio un error al verificar el token a traves del cookie", e);
+            } catch (ExpiredJwtException e) {
+                logger.warn("El token ya no es valido", e);
+            }
+        } else {
+            logger.warn("No se encontraron tokens en los cookies");
         }
 
         logger.debug("checking authentication for user '{}'", username);

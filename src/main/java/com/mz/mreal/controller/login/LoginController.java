@@ -4,11 +4,13 @@ import com.mz.mreal.controller.auth.JwtAuthenticationResponse;
 import com.mz.mreal.util.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -18,6 +20,9 @@ public class LoginController {
     private final UserDetailsService userDetailsService;
     private final JwtTokenUtil jwtTokenUtil;
 
+    @Value("${jwt.expiration}")
+    private Long expiration;
+
     @Autowired
     public LoginController(@Qualifier("jwtUserDetailsService") UserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil) {
         this.userDetailsService = userDetailsService;
@@ -26,9 +31,12 @@ public class LoginController {
 
     @PostMapping
     public @ResponseBody
-    JwtAuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
+    JwtAuthenticationResponse login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
+        Cookie cookie = new Cookie("token", token);
+        cookie.setMaxAge(expiration.intValue());
+        response.addCookie(cookie);
         return new JwtAuthenticationResponse(token);
     }
 
