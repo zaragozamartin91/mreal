@@ -3,14 +3,13 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        index: path.join(__dirname, 'components', 'Index.js'),
-        login: path.join(__dirname, 'components', 'Login.js'),
+        index: path.join(__dirname, 'components', 'Index.js')
     },
 
     /* Se creara un archivo bundle por cada entrada que debera ser importado como <script></script> en las vistas */
     output: {
         filename: "[name].bundle.js",
-        path: path.join(__dirname, 'src' , 'main' , 'resources' , 'static', 'js')
+        path: path.join(__dirname, 'src', 'main', 'resources', 'static', 'js')
     },
 
     /* Indicamos que deseamos utilizar Babel para compilar los componentes de la carpeta components/ excluyendo 

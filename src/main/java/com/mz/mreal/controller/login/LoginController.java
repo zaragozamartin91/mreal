@@ -1,47 +1,39 @@
 package com.mz.mreal.controller.login;
 
-import com.mz.mreal.model.RealityKeeper;
-import com.mz.mreal.model.RealityKeeperRepository;
+import com.mz.mreal.controller.auth.JwtAuthenticationResponse;
 import com.mz.mreal.util.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@RestController
 @RequestMapping(path = "/login")
 public class LoginController {
+    private final UserDetailsService userDetailsService;
     private final JwtTokenUtil jwtTokenUtil;
-    private final RealityKeeperRepository repository;
 
     @Autowired
-    public LoginController(JwtTokenUtil jwtTokenUtil, RealityKeeperRepository repository) {
+    public LoginController(@Qualifier("jwtUserDetailsService") UserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil) {
+        this.userDetailsService = userDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
-        this.repository = repository;
-    }
-
-    @GetMapping
-    public String login() {
-        return "login";
     }
 
     @PostMapping
-    public ModelAndView login(LoginRequest loginRequest) {
-        String username = loginRequest.getUsername();
-        RealityKeeper user = repository.findByUsername(username);
+    public @ResponseBody
+    JwtAuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
+        final String token = jwtTokenUtil.generateToken(userDetails);
+        return new JwtAuthenticationResponse(token);
+    }
 
-        if (user == null) {
-            ModelAndView modelAndView = new ModelAndView("login");
-            modelAndView.addObject("message", "No existe el usuario " + username);
-            return modelAndView;
-        } else {
-            ModelAndView modelAndView = new ModelAndView("index");
-
-            return modelAndView;
-        }
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public void handleUsernameNotFound(HttpServletResponse response) throws IOException {
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Usuario no encontrado");
     }
 }
