@@ -7,6 +7,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/main.css"/>
 
     <title>Hello, world!</title>
 </head>
@@ -20,5 +21,12 @@
 <script src="/js/bootstrap.bundle.min.js"></script>
 <script src="/js/common.bundle.js"></script>
 <script src="/js/index.bundle.js"></script>
+
+<script>
+    $(document).ready(function(){
+        $('.header').height($(window).height());
+    })
+</script>
+
 </body>
 </html>
