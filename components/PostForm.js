@@ -1,19 +1,43 @@
 import React from 'react'
+
 const axios = require('axios');
 
 const PostForm = React.createClass({
     getDefaultProps() {
-        return {
-            uploadType: 'meme',
-            token: 'NO_TOKEN'
-        }
+        return {token: 'NO_TOKEN', username: 'NO_USERNAME'}
+    },
+
+    getInitialState() {
+        return {title: '', message: '', succMsg: ''}
     },
 
     submitForm(e) {
         e.preventDefault();
         const imageInput = document.querySelector("#imageInput");
-        const data = new FormData(imageInput);
+        const formData = new FormData();
+        formData.append(imageInput.name, imageInput.files[0]);
 
+        console.log("subiendo meme: " + this.state.title);
+        console.log(imageInput.files[0]);
+
+        const url = `/api/post/meme/${this.props.username}/${this.state.title}`;
+        console.log("url: " + url);
+
+        axios.request({
+            url,
+            method: 'post',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${this.props.token}`
+            },
+            data: formData
+        }).then(response => {
+            this.setState({succMsg: 'Post subido exitosamente'});
+        }).catch(error => {
+            if (error.response) this.setState({message: error.response.data.message});
+            else this.setState({message: error.message});
+            console.error(error);
+        });
     },
 
     componentDidMount() {
@@ -24,6 +48,10 @@ const PostForm = React.createClass({
         return (
             <div className={"container"}>
                 <h1>Sube un post</h1>
+
+                <p className="text-danger">{this.state.message}</p>
+                <p className="text-success">{this.state.succMsg}</p>
+
                 <div className="form-check form-check-inline">
                     <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
                            value="option1"/>
@@ -37,8 +65,14 @@ const PostForm = React.createClass({
 
                 <form encType="multipart/form-data">
                     <div className="form-group">
-                        <label htmlFor="title">Titulo</label>
-                        <input type="text" className="form-control" id="title" placeholder="Titulo del post"/>
+                        <label htmlFor="title"
+                               value={this.state.title}>Titulo</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="title"
+                            placeholder="Titulo del post"
+                            onChange={e => this.setState({title: e.target.value})}/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="imageInput">Sube una imagen</label>
