@@ -31,13 +31,19 @@ public class LoginController {
 
     @PostMapping
     public @ResponseBody
-    JwtAuthenticationResponse login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
+    LoginResponse login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+        String username = loginRequest.getUsername();
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         final String token = jwtTokenUtil.generateToken(userDetails);
-        Cookie cookie = new Cookie("token", token);
-        cookie.setMaxAge(expiration.intValue());
-        response.addCookie(cookie);
-        return new JwtAuthenticationResponse(token);
+
+        Cookie tokenCookie = new Cookie("token", token);
+        tokenCookie.setMaxAge(expiration.intValue());
+        Cookie usernameCookie = new Cookie("username", username);
+        usernameCookie.setMaxAge(expiration.intValue());
+
+        response.addCookie(tokenCookie);
+        response.addCookie(usernameCookie);
+        return new LoginResponse(token, username);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)

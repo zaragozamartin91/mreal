@@ -22,11 +22,6 @@
 <script src="/js/common.bundle.js"></script>
 <script src="/js/index.bundle.js"></script>
 
-<script>
-    $(document).ready(function(){
-        $('.header').height($(window).height());
-    })
-</script>
 
 </body>
 </html>

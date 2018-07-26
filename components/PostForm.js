@@ -1,16 +1,23 @@
 import React from 'react'
+const axios = require('axios');
 
 const PostForm = React.createClass({
     getDefaultProps() {
         return {
-            uploadType: 'meme'
+            uploadType: 'meme',
+            token: 'NO_TOKEN'
         }
     },
 
     submitForm(e) {
         e.preventDefault();
         const imageInput = document.querySelector("#imageInput");
-        console.log("subiendo: " + JSON.stringify(imageInput));
+        const data = new FormData(imageInput);
+
+    },
+
+    componentDidMount() {
+        console.log("PostForm creado, token = " + this.props.token);
     },
 
     render() {
@@ -18,11 +25,13 @@ const PostForm = React.createClass({
             <div className={"container"}>
                 <h1>Sube un post</h1>
                 <div className="form-check form-check-inline">
-                    <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"/>
+                    <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
+                           value="option1"/>
                     <label className="form-check-label" htmlFor="inlineRadio1">meme</label>
                 </div>
                 <div className="form-check form-check-inline">
-                    <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"/>
+                    <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
+                           value="option2"/>
                     <label className="form-check-label" htmlFor="inlineRadio2">post</label>
                 </div>
 
@@ -33,7 +42,8 @@ const PostForm = React.createClass({
                     </div>
                     <div className="form-group">
                         <label htmlFor="imageInput">Sube una imagen</label>
-                        <input type="file" name={"image"} accept="image/*" className="form-control-file" id="imageInput"/>
+                        <input type="file" name={"image"} accept="image/*" className="form-control-file"
+                               id="imageInput"/>
                     </div>
                     <div className="form-group">
                         <button onClick={this.submitForm} className="btn btn-primary">Subir</button>

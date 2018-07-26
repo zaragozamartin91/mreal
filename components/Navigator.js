@@ -25,9 +25,7 @@ const Navigator = React.createClass({
                             <li className="nav-item">
                                 <Link className="nav-link" data-value="about" to="/">Home</Link>
                             </li>
-                            <li className="nav-item">
-                                <Link className="nav-link " data-value="portfolio" to="/roster">Roster</Link>
-                            </li>
+
                             <li className="nav-item">
                                 <Link className="nav-link " data-value="blog" to="/upload">+Subir</Link>
                             </li>

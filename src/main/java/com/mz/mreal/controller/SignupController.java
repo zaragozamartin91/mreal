@@ -4,16 +4,21 @@ import com.mz.mreal.model.RealityKeeper;
 import com.mz.mreal.model.RealityKeeperRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class SignupController {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final RealityKeeperRepository repository;
 
     @Autowired
-    private RealityKeeperRepository repository;
+    public SignupController(PasswordEncoder passwordEncoder, RealityKeeperRepository repository) {
+        this.passwordEncoder = passwordEncoder;
+        this.repository = repository;
+    }
 
     @PostMapping("/signup")
     public @ResponseBody

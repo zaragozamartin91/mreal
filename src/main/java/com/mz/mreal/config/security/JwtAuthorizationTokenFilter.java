@@ -72,6 +72,8 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             logger.warn("No se encontraron tokens en los cookies");
         }
 
+
+
         logger.debug("checking authentication for user '{}'", username);
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             logger.debug("security context was null, so authorizating user");

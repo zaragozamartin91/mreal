@@ -37,6 +37,10 @@
     background-color: #fafafa !important
 }
 
+body {
+    background: #fafafa;
+}
+
 main {
     padding-top: 75px;
 }
