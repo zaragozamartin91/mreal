@@ -17,4 +17,6 @@ jwt:
   routeAuthenticationPath: /auth
   routeAuthenticationRefresh: /refresh
 
+server:
+  port: 9090
 
