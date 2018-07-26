@@ -16,7 +16,7 @@ const Navigator = React.createClass({
                             aria-controls="navbarSupportedContent"
                             aria-expanded="false"
                             aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"/>
+                        <i className="fas fa-bars" />
                     </button>
 
                     <div className="collapse navbar-collapse " id="navbarSupportedContent">
