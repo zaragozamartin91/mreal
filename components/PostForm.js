@@ -20,7 +20,7 @@ const PostForm = React.createClass({
         console.log("subiendo meme: " + this.state.title);
         console.log(imageInput.files[0]);
 
-        const url = `/api/post/meme/${this.props.username}/${this.state.title}`;
+        const url = `api/post/meme/${this.props.username}/${this.state.title}`;
         console.log("url: " + url);
 
         axios.request({
@@ -32,7 +32,7 @@ const PostForm = React.createClass({
             },
             data: formData
         }).then(response => {
-            this.setState({succMsg: 'Post subido exitosamente'});
+            this.setState({succMsg: response.data.message});
         }).catch(error => {
             if (error.response) this.setState({message: error.response.data.message});
             else this.setState({message: error.message});
