@@ -20,7 +20,7 @@ const PostForm = React.createClass({
         console.log("subiendo meme: " + this.state.title);
         console.log(imageInput.files[0]);
 
-        const url = `api/post/meme/${this.props.username}/${this.state.title}`;
+        const url = `api/meme/${this.props.username}/${this.state.title}`;
         console.log("url: " + url);
 
         axios.request({

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,11 +16,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/post")
+@RequestMapping("/api")
 public class PostController {
     private final File imagesDir;
     private final MemeRepository memeRepository;
@@ -57,5 +61,10 @@ public class PostController {
             e.printStackTrace();
             return new ResponseEntity<>(new PostResponse("Error al mover el archivo"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/memes")
+    public @ResponseBody List<MemeJson> getMemes() {
+        return memeRepository.findAll().stream().map(MemeJson::new).collect(Collectors.toList());
     }
 }

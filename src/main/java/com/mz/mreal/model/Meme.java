@@ -1,5 +1,8 @@
 package com.mz.mreal.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -37,52 +40,52 @@ public class Meme {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public RealityKeeper getOwner() {
         return owner;
     }
 
-    public void setOwner(RealityKeeper owner) {
-        this.owner = owner;
-    }
-
     public String getImgName() {
         return imgName;
-    }
-
-    public void setImgName(String imgName) {
-        this.imgName = imgName;
     }
 
     public Date getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     public Long getUpvotes() {
         return upvotes;
     }
 
-    public void setUpvotes(Long upvotes) {
-        this.upvotes = upvotes;
-    }
-
     public Long getDownvotes() {
         return downvotes;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setOwner(RealityKeeper owner) {
+        this.owner = owner;
+    }
+
+    public void setImgName(String imgName) {
+        this.imgName = imgName;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setUpvotes(Long upvotes) {
+        this.upvotes = upvotes;
     }
 
     public void setDownvotes(Long downvotes) {
