@@ -1,15 +1,13 @@
-package com.mz.mreal.controller;
+package com.mz.mreal.controller.api.signup;
 
 import com.mz.mreal.model.RealityKeeper;
 import com.mz.mreal.model.RealityKeeperRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api")
 public class SignupController {
     private final PasswordEncoder passwordEncoder;
     private final RealityKeeperRepository repository;

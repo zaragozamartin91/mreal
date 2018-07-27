@@ -1,4 +1,4 @@
-package com.mz.mreal.controller;
+package com.mz.mreal.controller.api.signup;
 
 public class SignupRequest {
     private String username;

@@ -1,9 +1,8 @@
 package com.mz.mreal.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class RealityKeeper {
@@ -12,6 +11,9 @@ public class RealityKeeper {
     private Long id;
     private String username;
     private String password;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
+    private Set<Meme> memes = new HashSet<>();
 
     public RealityKeeper(String username, String password) {
         this.username = username;
@@ -45,12 +47,20 @@ public class RealityKeeper {
         this.password = password;
     }
 
+    public Set<Meme> getMemes() {
+        return memes;
+    }
+
+    public void setMemes(Set<Meme> memes) {
+        this.memes = memes;
+    }
+
     @Override
     public String toString() {
         return "RealityKeeper{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
+                ", password='" + "****" + '\'' +
                 '}';
     }
 }

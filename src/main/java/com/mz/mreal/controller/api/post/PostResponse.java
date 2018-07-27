@@ -1,4 +1,4 @@
-package com.mz.mreal.controller.post;
+package com.mz.mreal.controller.api.post;
 
 public class PostResponse {
     private String message;
