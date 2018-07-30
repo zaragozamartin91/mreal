@@ -27,10 +27,13 @@ public class Meme {
     private Long upvotes = 0L;
     private Long downvotes = 0L;
 
-    public Meme(String title, RealityKeeper owner, String imgName) {
+    private String description = "";
+
+    public Meme(String title, RealityKeeper owner, String imgName, String description) {
         this.title = title;
         this.owner = owner;
         this.imgName = imgName;
+        this.description = description;
     }
 
     public Meme() {
@@ -92,7 +95,16 @@ public class Meme {
         this.downvotes = downvotes;
     }
 
-    @Override public String toString() {
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public String toString() {
         return "Meme{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
@@ -100,6 +112,7 @@ public class Meme {
                 ", date=" + date +
                 ", upvotes=" + upvotes +
                 ", downvotes=" + downvotes +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

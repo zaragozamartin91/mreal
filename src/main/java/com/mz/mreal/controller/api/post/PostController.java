@@ -6,6 +6,9 @@ import com.mz.mreal.model.RealityKeeper;
 import com.mz.mreal.model.RealityKeeperRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -36,8 +39,12 @@ public class PostController {
         this.realityKeeperRepository = realityKeeperRepository;
     }
 
-    @RequestMapping(path = "/meme/{username}/{title}", method = RequestMethod.POST)
-    public ResponseEntity<PostResponse> postMeme(@RequestParam("image") MultipartFile imageFile, @PathVariable String username, @PathVariable String title) {
+    @RequestMapping(path = "/meme", method = RequestMethod.POST)
+    public ResponseEntity<PostResponse> postMeme(
+            @RequestParam("image") MultipartFile imageFile,
+            @RequestParam("username") String username,
+            @RequestParam("title") String title,
+            @RequestParam("description") String description) {
         System.out.println(new File("./").getAbsolutePath());
         try {
 
@@ -48,7 +55,7 @@ public class PostController {
                 File dest = new File(imagesDir, destFileName);
                 Files.copy(imageFile.getInputStream(), dest.toPath());
 
-                Meme meme = new Meme(title, realityKeeper.get(), destFileName);
+                Meme meme = new Meme(title, realityKeeper.get(), destFileName, description);
                 Meme savedMeme = memeRepository.save(meme);
 
                 PostResponse postResponse = new PostResponse(String.format("Post %d : %s subido", savedMeme.getId(), destFileName));
@@ -63,8 +70,15 @@ public class PostController {
         }
     }
 
+    /**
+     * Obtiene los memes disponibles. Utiliza paginacion mediante query params: Ejemplo: ?page=1.
+     *
+     * @param pageable Parametro de paginacion inyectado.
+     * @return Los memes disponibles.
+     */
     @GetMapping("/memes")
-    public @ResponseBody List<MemeJson> getMemes() {
-        return memeRepository.findAll().stream().map(MemeJson::new).collect(Collectors.toList());
+    public @ResponseBody
+    List<MemeJson> getMemes(@PageableDefault(value = 20, page = 0, direction = Sort.Direction.DESC, sort = {"date"}) Pageable pageable) {
+        return memeRepository.findAll(pageable).stream().map(MemeJson::new).collect(Collectors.toList());
     }
 }

@@ -8,7 +8,7 @@ const PostForm = React.createClass({
     },
 
     getInitialState() {
-        return {title: '', message: '', succMsg: ''}
+        return {title: '', message: '', succMsg: '', description: ''}
     },
 
     submitForm(e) {
@@ -16,11 +16,14 @@ const PostForm = React.createClass({
         const imageInput = document.querySelector("#imageInput");
         const formData = new FormData();
         formData.append(imageInput.name, imageInput.files[0]);
+        formData.append('title', this.state.title);
+        formData.append('description', this.state.description);
+        formData.append('username', this.props.username);
 
         console.log("subiendo meme: " + this.state.title);
         console.log(imageInput.files[0]);
 
-        const url = `api/meme/${this.props.username}/${this.state.title}`;
+        const url = `api/meme`;
         console.log("url: " + url);
 
         axios.request({
@@ -74,6 +77,18 @@ const PostForm = React.createClass({
                             placeholder="Titulo del post"
                             onChange={e => this.setState({title: e.target.value})}/>
                     </div>
+
+                    <div className="form-group">
+                        <label htmlFor="description"
+                               value={this.state.description}>Titulo</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="description"
+                            placeholder="Comentario del post"
+                            onChange={e => this.setState({description: e.target.value})}/>
+                    </div>
+
                     <div className="form-group">
                         <label htmlFor="imageInput">Sube una imagen</label>
                         <input type="file" name={"image"} accept="image/*" className="form-control-file"

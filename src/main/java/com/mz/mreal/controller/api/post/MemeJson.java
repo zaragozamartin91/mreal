@@ -24,4 +24,6 @@ public class MemeJson {
     public Long getDownvotes() {return meme.getDownvotes();}
 
     public String getUsername() {return meme.getOwner().getUsername();}
+
+    public String getDescription() {return meme.getDescription();}
 }
