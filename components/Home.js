@@ -36,15 +36,24 @@ const Home = React.createClass({
     },
 
     render() {
-        const memeContainers = this.state.memes.map(meme => {
+        const memeCardsStyle = {
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            maxWidth: '400px',
+            marginBottom: '10px'
+        };
+
+        const memeCards = this.state.memes.map(meme => {
             const src = 'img/' + meme.imgName;
             return (
-                <div className="card" style={{width: "400px"}}>
+                <div className="card" style={memeCardsStyle}>
                     <img className="card-img-top" src={src} alt="Card image" style={{width: "100%"}}/>
                     <div className="card-body">
                         <h4 className="card-title">{meme.title}</h4>
+                        <p className="card-text">{meme.username}</p>
                         <p className="card-text">{meme.description}</p>
-                        <a href="#" className="btn btn-primary">Upvote</a>
+                        <button type={"button"} className="btn btn-default"><i className="far fa-thumbs-up"/></button>
+                        <span style={{marginLeft: '5px'}}>{meme.upvotes}</span>
                     </div>
                 </div>
             );
@@ -58,7 +67,9 @@ const Home = React.createClass({
 
                 <p className="text-danger">{this.state.message}</p>
 
-                {memeContainers}
+                <div className={"container"}>
+                    {memeCards}
+                </div>
             </div>
         );
     }

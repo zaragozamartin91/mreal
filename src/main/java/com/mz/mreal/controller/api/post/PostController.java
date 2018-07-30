@@ -52,6 +52,7 @@ public class PostController {
             if (realityKeeper.isPresent()) {
                 String normalizedFileName = Optional.ofNullable(imageFile.getOriginalFilename()).orElse("IMAGE").replaceAll(Pattern.quote(" "), "");
                 String destFileName = String.format("%d_%s", Calendar.getInstance().getTimeInMillis(), normalizedFileName);
+
                 File dest = new File(imagesDir, destFileName);
                 Files.copy(imageFile.getInputStream(), dest.toPath());
 
