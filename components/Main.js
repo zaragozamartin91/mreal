@@ -13,7 +13,7 @@ function Main(props) {
         <main>
             <Switch>
                 <Route exact path='/'
-                       redner={pps => <Home {...pps} token={props.token}/>}/>
+                       render={pps => <Home {...pps} token={props.token}/>}/>
                 <Route path='/upload'
                        render={pps => <PostForm {...pps} username={props.username} token={props.token}/>}/>
             </Switch>
