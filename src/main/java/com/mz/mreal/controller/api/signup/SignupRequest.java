@@ -4,6 +4,14 @@ public class SignupRequest {
     private String username;
     private String password;
 
+    public SignupRequest(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public SignupRequest() {
+    }
+
     public String getUsername() {
         return username;
     }
@@ -18,5 +26,13 @@ public class SignupRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "SignupRequest{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

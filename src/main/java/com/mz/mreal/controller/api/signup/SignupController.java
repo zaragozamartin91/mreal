@@ -21,6 +21,7 @@ public class SignupController {
     @PostMapping("/signup")
     public @ResponseBody
     RealityKeeper createUser(@RequestBody SignupRequest signupRequest) {
+        System.out.println("SignupRequest: " + signupRequest);
         String password = signupRequest.getPassword();
         String username = signupRequest.getUsername();
         String encoded = passwordEncoder.encode(password);

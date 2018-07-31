@@ -57,6 +57,8 @@ dependencies {
     testCompile('org.springframework.security:spring-security-test')
     testCompile('com.h2database:h2')
 
+    testCompile "org.mockito:mockito-core:2.+"
+
     // DESCOMENTAR ESTA DEPENDENCIA PARA GENERAR UN DEPLOYABLE EN TOMCAT
 //    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 }

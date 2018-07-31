@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Calendar;
 import java.util.Collections;
@@ -45,7 +47,7 @@ public class PostController {
             @RequestParam("username") String username,
             @RequestParam("title") String title,
             @RequestParam("description") String description) {
-        System.out.println(new File("./").getAbsolutePath());
+
         try {
 
             Optional<RealityKeeper> realityKeeper = Optional.ofNullable(realityKeeperRepository.findByUsername(username));
@@ -53,8 +55,7 @@ public class PostController {
                 String normalizedFileName = Optional.ofNullable(imageFile.getOriginalFilename()).orElse("IMAGE").replaceAll(Pattern.quote(" "), "");
                 String destFileName = String.format("%d_%s", Calendar.getInstance().getTimeInMillis(), normalizedFileName);
 
-                File dest = new File(imagesDir, destFileName);
-                Files.copy(imageFile.getInputStream(), dest.toPath());
+                copyImg(imageFile, destFileName);
 
                 Meme meme = new Meme(title, realityKeeper.get(), destFileName, description);
                 Meme savedMeme = memeRepository.save(meme);
@@ -71,13 +72,18 @@ public class PostController {
         }
     }
 
+    void copyImg(MultipartFile imageFile, String destFileName) throws IOException {
+        File dest = new File(imagesDir, destFileName);
+        Files.copy(imageFile.getInputStream(), dest.toPath());
+    }
+
     /**
      * Obtiene los memes disponibles. Utiliza paginacion mediante query params: Ejemplo: ?page=1.
      *
      * @param pageable Parametro de paginacion inyectado.
      * @return Los memes disponibles.
      */
-    @GetMapping("/memes")
+    @GetMapping(path = "/memes", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     List<MemeJson> getMemes(@PageableDefault(value = 20, page = 0, direction = Sort.Direction.DESC, sort = {"date"}) Pageable pageable) {
         return memeRepository.findAll(pageable).stream().map(MemeJson::new).collect(Collectors.toList());
