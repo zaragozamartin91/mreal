@@ -50,10 +50,10 @@ const Home = React.createClass({
                     <img className="card-img-top" src={src} alt="Card image" style={{width: "100%"}}/>
                     <div className="card-body">
                         <h4 className="card-title">{meme.title}</h4>
-                        <p className="card-text">{meme.username}</p>
+                        <p className="card-text"><strong>{meme.username}</strong></p>
                         <p className="card-text">{meme.description}</p>
                         <button type={"button"} className="btn btn-default"><i className="far fa-thumbs-up"/></button>
-                        <span style={{marginLeft: '5px'}}>{meme.upvotes}</span>
+                        <span style={{marginLeft: '10px'}}>{meme.upvotes}</span>
                     </div>
                 </div>
             );

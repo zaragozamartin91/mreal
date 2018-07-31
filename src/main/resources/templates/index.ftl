@@ -16,7 +16,7 @@
 
     <link rel="stylesheet" href="css/main.css"/>
 
-    <title>Hello, world!</title>
+    <title>mreal</title>
 </head>
 <body>
 

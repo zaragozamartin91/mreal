@@ -16,6 +16,13 @@ public class JsonMapper {
         ow = mapper.writer().withDefaultPrettyPrinter();
     }
 
+    /**
+     * Convierte un POJO en un json string.
+     *
+     * @param pojo Pojo a mapear como un json string.
+     * @return Json string.
+     * @throws JsonProcessingException Si el pojo no puede ser mapeado como json.
+     */
     public String map(Object pojo) throws JsonProcessingException {
         return ow.writeValueAsString(pojo);
     }
