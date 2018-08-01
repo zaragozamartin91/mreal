@@ -23,7 +23,7 @@ const Navigator = React.createClass({
                         <ul className="navbar-nav mr-4">
 
                             <li className="nav-item">
-                                <Link className="nav-link" data-value="about" to="/">Home</Link>
+                                <Link className="nav-link" data-value="about" to="/">Principal</Link>
                             </li>
 
                             <li className="nav-item">

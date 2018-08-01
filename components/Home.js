@@ -35,6 +35,22 @@ const Home = React.createClass({
         });
     },
 
+    upvoteMeme(id) {
+        const self = this;
+        return function () {
+            axios.post(`api/meme/${id}`).then(response => {
+                console.log("response.data: " + JSON.stringify(response.data));
+                const meme = self.state.memes.find(m => m.id === id);
+                meme.upvotes = meme.upvotes + 1;
+                self.setState({memes: self.state.memes});
+            }).catch(error => {
+                if (error.response) self.setState({message: error.response.data.message});
+                else self.setState({message: error.message});
+                console.error(error);
+            });
+        }
+    },
+
     render() {
         const memeCardsStyle = {
             marginLeft: 'auto',
@@ -52,7 +68,9 @@ const Home = React.createClass({
                         <h4 className="card-title">{meme.title}</h4>
                         <p className="card-text"><strong>{meme.username}</strong></p>
                         <p className="card-text">{meme.description}</p>
-                        <button type={"button"} className="btn btn-default"><i className="far fa-thumbs-up"/></button>
+                        <button type={"button"} className="btn btn-default" onClick={this.upvoteMeme(meme.id)}>
+                            <i className="far fa-thumbs-up"/>
+                        </button>
                         <span style={{marginLeft: '10px'}}>{meme.upvotes}</span>
                     </div>
                 </div>

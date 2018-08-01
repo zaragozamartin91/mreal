@@ -86,6 +86,14 @@ public class PostController {
     @GetMapping(path = "/memes", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     List<MemeJson> getMemes(@PageableDefault(value = 20, page = 0, direction = Sort.Direction.DESC, sort = {"date"}) Pageable pageable) {
+//        return memeRepository.findThemMemes().stream().map(MemeJson::new).collect(Collectors.toList());
         return memeRepository.findAll(pageable).stream().map(MemeJson::new).collect(Collectors.toList());
+    }
+
+    @PostMapping(path = "/meme/{id}")
+    public @ResponseBody
+    PostResponse upvoteMeme(@PathVariable Long id) {
+        memeRepository.upvote(id);
+        return new PostResponse("ok");
     }
 }
