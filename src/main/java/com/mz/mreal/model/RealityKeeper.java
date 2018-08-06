@@ -20,6 +20,14 @@ public class RealityKeeper {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
     private Set<Meme> memes = new HashSet<>();
 
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "rkeeper_upvotes",
+            joinColumns = { @JoinColumn(name = "rkeeper_id") },
+            inverseJoinColumns = { @JoinColumn(name = "meme_id") }
+    )
+    private Set<Meme> upvotedMemes = new HashSet<>();
+
     public RealityKeeper(String username, String password) {
         this.username = username;
         this.password = password;
@@ -58,6 +66,14 @@ public class RealityKeeper {
 
     public void setMemes(Set<Meme> memes) {
         this.memes = memes;
+    }
+
+    public Set<Meme> getUpvotedMemes() {
+        return upvotedMemes;
+    }
+
+    public void setUpvotedMemes(Set<Meme> upvotedMemes) {
+        this.upvotedMemes = upvotedMemes;
     }
 
     @Override

@@ -9,7 +9,7 @@ const Home = React.createClass({
     },
 
     getDefaultProps() {
-        return {token: 'NO_TOKEN'}
+        return {token: 'NO_TOKEN', username: 'NO_USERNAME'}
     },
 
     componentDidMount() {
@@ -38,7 +38,12 @@ const Home = React.createClass({
     upvoteMeme(id) {
         const self = this;
         return function () {
-            axios.post(`api/meme/${id}`).then(response => {
+            const username = self.props.username;
+            const url = `api/meme/${id}/${username}`;
+
+            console.log(`UPVOTE URL: ${url}`);
+
+            axios.post(url).then(response => {
                 console.log("response.data: " + JSON.stringify(response.data));
                 const meme = self.state.memes.find(m => m.id === id);
                 meme.upvotes = meme.upvotes + 1;

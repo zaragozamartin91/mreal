@@ -28,9 +28,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -64,8 +65,8 @@ public class PostControllerTest {
 
     @After
     public void cleanup() {
-        memeRepository.deleteAll();
         realityKeeperRepository.deleteAll();
+        memeRepository.deleteAll();
     }
 
     @Test
@@ -82,6 +83,38 @@ public class PostControllerTest {
                 .param("description", "fooDescription"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
+        List<Meme> allMemes = memeRepository.findAll();
+        assertTrue(allMemes.size() > 0);
+
+    }
+
+    @Test
+    public void upvoteMeme() throws Exception {
+        MockMultipartFile mockMultipartFile =
+                new MockMultipartFile("image", "filename.txt", "text/plain", "some xml".getBytes());
+
+        String username = mockSignupRequest.getUsername();
+
+        mockMvc.perform(multipart("/api/meme")
+                .file(mockMultipartFile)
+                .param("username", username)
+                .param("title", "fooTitle")
+                .param("description", "fooDescription"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        List<Meme> allMemes = memeRepository.findAll();
+        Meme meme = allMemes.get(0);
+
+        Long memeId = meme.getId();
+        String url = String.format("/api/meme/%d/%s", memeId, username);
+        mockMvc.perform(post(url))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        Meme upvotedMeme = memeRepository.hasUpvote(memeId, username);
+        assertNotNull(upvotedMeme);
+
+        int upvoteCount = memeRepository.countUpvotes(upvotedMeme.getId());
+        assertTrue(upvoteCount > 0);
     }
 
     @Test

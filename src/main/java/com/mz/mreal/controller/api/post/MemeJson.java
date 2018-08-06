@@ -9,7 +9,13 @@ public class MemeJson {
     @JsonIgnore
     private Meme meme;
 
-    public MemeJson(Meme meme) { this.meme = meme; }
+    @JsonIgnore
+    private int upv;
+
+    public MemeJson(Meme meme) {
+        this.meme = meme;
+        upv = meme.getUpvoteUsers().size();
+    }
 
     public Long getId() {return meme.getId();}
 
@@ -19,7 +25,7 @@ public class MemeJson {
 
     public Date getDate() {return meme.getDate();}
 
-    public Long getUpvotes() {return meme.getUpvotes();}
+    public Long getUpvotes() {return (long) upv;}
 
     public Long getDownvotes() {return meme.getDownvotes();}
 

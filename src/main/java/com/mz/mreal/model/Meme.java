@@ -1,10 +1,9 @@
 package com.mz.mreal.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Meme {
@@ -24,10 +23,12 @@ public class Meme {
     @Column(name = "DATE", nullable = false)
     private Date date = new Date();
 
-    private Long upvotes = 0L;
     private Long downvotes = 0L;
 
     private String description = "";
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "upvotedMemes")
+    private Set<RealityKeeper> upvoteUsers = new HashSet<>();
 
     public Meme(String title, RealityKeeper owner, String imgName, String description) {
         this.title = title;
@@ -59,12 +60,16 @@ public class Meme {
         return date;
     }
 
-    public Long getUpvotes() {
-        return upvotes;
-    }
-
     public Long getDownvotes() {
         return downvotes;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Set<RealityKeeper> getUpvoteUsers() {
+        return upvoteUsers;
     }
 
     public void setId(Long id) {
@@ -87,10 +92,6 @@ public class Meme {
         this.date = date;
     }
 
-    public void setUpvotes(Long upvotes) {
-        this.upvotes = upvotes;
-    }
-
     public void setDownvotes(Long downvotes) {
         this.downvotes = downvotes;
     }
@@ -99,8 +100,8 @@ public class Meme {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setUpvoteUsers(Set<RealityKeeper> upvoteUsers) {
+        this.upvoteUsers = upvoteUsers;
     }
 
     @Override
@@ -110,7 +111,6 @@ public class Meme {
                 ", title='" + title + '\'' +
                 ", imgName='" + imgName + '\'' +
                 ", date=" + date +
-                ", upvotes=" + upvotes +
                 ", downvotes=" + downvotes +
                 ", description='" + description + '\'' +
                 '}';

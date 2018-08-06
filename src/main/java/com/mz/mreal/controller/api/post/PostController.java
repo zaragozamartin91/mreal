@@ -12,16 +12,14 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -84,16 +82,30 @@ public class PostController {
      * @return Los memes disponibles.
      */
     @GetMapping(path = "/memes", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional(readOnly = true)
     public @ResponseBody
-    List<MemeJson> getMemes(@PageableDefault(value = 20, page = 0, direction = Sort.Direction.DESC, sort = {"date"}) Pageable pageable) {
-//        return memeRepository.findThemMemes().stream().map(MemeJson::new).collect(Collectors.toList());
-        return memeRepository.findAll(pageable).stream().map(MemeJson::new).collect(Collectors.toList());
+    List<MemeJson> getMemes(@PageableDefault(value = 20, page = 0, direction = Sort.Direction.DESC, sort = { "date" }) Pageable pageable) {
+        return memeRepository
+                .findAll(pageable)
+                .stream()
+                .map(MemeJson::new)
+                .collect(Collectors.toList());
     }
 
-    @PostMapping(path = "/meme/{id}")
+    @PostMapping(path = "/meme/{id}/{username}")
     public @ResponseBody
-    PostResponse upvoteMeme(@PathVariable Long id) {
-        memeRepository.upvote(id);
-        return new PostResponse("ok");
+    ResponseEntity<PostResponse> upvoteMeme(@PathVariable Long id, @PathVariable String username) {
+        //        memeRepository.upvote(id);
+        Meme meme = memeRepository.hasUpvote(id, username);
+        if (meme == null) {
+            try {
+                RealityKeeper user = realityKeeperRepository.findByUsername(username);
+                user.getUpvotedMemes().add(memeRepository.findById(id).get());
+                realityKeeperRepository.save(user);
+            } catch (Exception e) {
+                return new ResponseEntity<>(new PostResponse("Error al votar usuario"), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        return new ResponseEntity<>(new PostResponse("ok"), HttpStatus.OK);
     }
 }

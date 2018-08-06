@@ -1,5 +1,5 @@
 import React from 'react'
-import {Switch, Route} from 'react-router-dom'
+import {Route, Switch} from 'react-router-dom'
 import Home from './Home'
 import PostForm from './PostForm'
 
@@ -9,13 +9,14 @@ import PostForm from './PostForm'
 // with /roster or /schedule. The / route will only match
 // when the pathname is exactly the string "/"
 function Main(props) {
+
     return (
         <main>
             <Switch>
                 <Route exact path='/'
-                       render={pps => <Home {...pps} token={props.token}/>}/>
+                       render={pps => <Home {...pps} {...props} />}/>
                 <Route path='/upload'
-                       render={pps => <PostForm {...pps} username={props.username} token={props.token}/>}/>
+                       render={pps => <PostForm {...pps} {...props} />}/>
             </Switch>
         </main>
     );
