@@ -5,8 +5,8 @@ import com.mz.mreal.controller.api.signup.SignupController;
 import com.mz.mreal.controller.api.signup.SignupRequest;
 import com.mz.mreal.model.Meme;
 import com.mz.mreal.model.MemeRepository;
-import com.mz.mreal.model.RealityKeeper;
 import com.mz.mreal.model.RealityKeeperRepository;
+import com.mz.mreal.service.PostService;
 import com.mz.mreal.util.json.JsonMapper;
 import org.junit.After;
 import org.junit.Before;
@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @RunWith(SpringRunner.class)
@@ -57,6 +56,9 @@ public class PostControllerTest {
     @Autowired
     private JsonMapper jsonMapper;
 
+    @Autowired
+    private PostService postService;
+
     @Before
     public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
@@ -71,10 +73,8 @@ public class PostControllerTest {
 
     @Test
     public void postMeme() throws Exception {
-        PostController spy = spy(postController);
         MockMultipartFile mockMultipartFile =
                 new MockMultipartFile("image", "filename.txt", "text/plain", "some xml".getBytes());
-        doNothing().when(spy).copyImg(any(), any());
 
         mockMvc.perform(multipart("/api/meme")
                 .file(mockMultipartFile)
@@ -119,11 +119,11 @@ public class PostControllerTest {
 
     @Test
     public void getMemes() throws Exception {
-        RealityKeeper owner = realityKeeperRepository.findByUsername(mockSignupRequest.getUsername());
         List<Meme> memes = new ArrayList<>();
+        String username = mockSignupRequest.getUsername();
         int memeCount = 5;
         for (int i = 0; i < memeCount; i++) {
-            Meme savedMeme = memeRepository.save(new Meme("title_" + i, owner, "img_" + i, "desc_" + i));
+            Meme savedMeme = postService.postMeme(username, "title_" + i, "img_" + i, "desc_" + i);
             memes.add(savedMeme);
         }
 

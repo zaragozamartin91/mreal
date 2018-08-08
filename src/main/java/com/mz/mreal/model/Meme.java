@@ -13,10 +13,6 @@ public class Meme {
 
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner")
-    private RealityKeeper owner;
-
     private String imgName;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -26,6 +22,10 @@ public class Meme {
     private Long downvotes = 0L;
 
     private String description = "";
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
+    private RealityKeeper owner;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "upvotedMemes")
     private Set<RealityKeeper> upvoteUsers = new HashSet<>();

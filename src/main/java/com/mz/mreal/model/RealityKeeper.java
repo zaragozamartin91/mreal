@@ -17,15 +17,12 @@ public class RealityKeeper {
     @JsonIgnore
     private String password;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
+    /* Si borro un rkeeper, entonces borro sus memes asociados */
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
     private Set<Meme> memes = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "rkeeper_upvotes",
-            joinColumns = { @JoinColumn(name = "rkeeper_id") },
-            inverseJoinColumns = { @JoinColumn(name = "meme_id") }
-    )
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "rkeeper_upvotes")
     private Set<Meme> upvotedMemes = new HashSet<>();
 
     public RealityKeeper(String username, String password) {

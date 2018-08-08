@@ -1,9 +1,7 @@
 package com.mz.mreal.controller.api.post;
 
 import com.mz.mreal.model.Meme;
-import com.mz.mreal.model.MemeRepository;
-import com.mz.mreal.model.RealityKeeper;
-import com.mz.mreal.model.RealityKeeperRepository;
+import com.mz.mreal.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
@@ -29,14 +27,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class PostController {
     private final File imagesDir;
-    private final MemeRepository memeRepository;
-    private final RealityKeeperRepository realityKeeperRepository;
+    private final PostService postService;
 
     @Autowired
-    public PostController(@Qualifier("imagesDir") File imagesDir, MemeRepository memeRepository, RealityKeeperRepository realityKeeperRepository) {
+    public PostController(@Qualifier("imagesDir") File imagesDir, PostService postService) {
         this.imagesDir = imagesDir;
-        this.memeRepository = memeRepository;
-        this.realityKeeperRepository = realityKeeperRepository;
+        this.postService = postService;
     }
 
     @RequestMapping(path = "/meme", method = RequestMethod.POST)
@@ -47,22 +43,14 @@ public class PostController {
             @RequestParam("description") String description) {
 
         try {
+            String normalizedFileName = Optional.ofNullable(imageFile.getOriginalFilename()).orElse("IMAGE").replaceAll(Pattern.quote(" "), "");
+            String destFileName = String.format("%d_%s", Calendar.getInstance().getTimeInMillis(), normalizedFileName);
+            copyImg(imageFile, destFileName);
 
-            Optional<RealityKeeper> realityKeeper = Optional.ofNullable(realityKeeperRepository.findByUsername(username));
-            if (realityKeeper.isPresent()) {
-                String normalizedFileName = Optional.ofNullable(imageFile.getOriginalFilename()).orElse("IMAGE").replaceAll(Pattern.quote(" "), "");
-                String destFileName = String.format("%d_%s", Calendar.getInstance().getTimeInMillis(), normalizedFileName);
+            Meme savedMeme = postService.postMeme(username, title, destFileName, description);
 
-                copyImg(imageFile, destFileName);
-
-                Meme meme = new Meme(title, realityKeeper.get(), destFileName, description);
-                Meme savedMeme = memeRepository.save(meme);
-
-                PostResponse postResponse = new PostResponse(String.format("Post %d : %s subido", savedMeme.getId(), destFileName));
-                return new ResponseEntity<>(postResponse, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(new PostResponse("El usuario " + username + " no existe"), HttpStatus.NOT_FOUND);
-            }
+            PostResponse postResponse = new PostResponse(String.format("Post %d : %s subido", savedMeme.getId(), destFileName));
+            return new ResponseEntity<>(postResponse, HttpStatus.OK);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -85,8 +73,7 @@ public class PostController {
     @Transactional(readOnly = true)
     public @ResponseBody
     List<MemeJson> getMemes(@PageableDefault(value = 20, page = 0, direction = Sort.Direction.DESC, sort = { "date" }) Pageable pageable) {
-        return memeRepository
-                .findAll(pageable)
+        return postService.getMemes(pageable)
                 .stream()
                 .map(MemeJson::new)
                 .collect(Collectors.toList());
@@ -96,16 +83,13 @@ public class PostController {
     public @ResponseBody
     ResponseEntity<PostResponse> upvoteMeme(@PathVariable Long id, @PathVariable String username) {
         //        memeRepository.upvote(id);
-        Meme meme = memeRepository.hasUpvote(id, username);
-        if (meme == null) {
-            try {
-                RealityKeeper user = realityKeeperRepository.findByUsername(username);
-                user.getUpvotedMemes().add(memeRepository.findById(id).get());
-                realityKeeperRepository.save(user);
-            } catch (Exception e) {
-                return new ResponseEntity<>(new PostResponse("Error al votar usuario"), HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+        try {
+            postService.upvoteMeme(id, username);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new PostResponse("Error al votar usuario"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
         return new ResponseEntity<>(new PostResponse("ok"), HttpStatus.OK);
     }
 }
