@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 buildscript {
     ext {
         springBootVersion = '2.0.3.RELEASE'
@@ -31,7 +33,11 @@ task npmBuild {
     description 'Runs "npm run build"'
 
     doLast {
-        String[] cmd = ["cmd", "/c", "npm", "run", "build"]
+	String[] cmd = ["bash", "-c", "npm", "run", "build"]
+	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+		cmd = ["cmd", "/c", "npm", "run", "build"]
+    	}
+        
         def process = Runtime.getRuntime().exec(cmd, null)
         String line = ""
         def br = new BufferedReader(new InputStreamReader(process.getInputStream()))

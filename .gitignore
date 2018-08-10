@@ -12,6 +12,7 @@
 
 # Package Files #
 *.jar
+!gradle/wrapper/gradle-wrapper.jar
 *.war
 *.nar
 *.ear
@@ -30,3 +31,7 @@ build/
 *.iml
 .gradle/
 img/
+bin/
+.settings/
+.classpath
+.project
