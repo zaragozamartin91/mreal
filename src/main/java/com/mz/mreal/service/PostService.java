@@ -41,12 +41,14 @@ public class PostService {
     }
 
     @Transactional
-    public void upvoteMeme(Long id, String username) {
+    public boolean upvoteMeme(Long id, String username) {
         Meme meme = memeRepository.hasUpvote(id, username);
         if (meme == null) {
             RealityKeeper user = realityKeeperRepository.findByUsername(username);
             user.getUpvotedMemes().add(memeRepository.findById(id).get());
             realityKeeperRepository.save(user);
+            return true;
         }
+        return false;
     }
 }

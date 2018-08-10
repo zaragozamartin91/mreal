@@ -84,12 +84,13 @@ public class PostController {
     ResponseEntity<PostResponse> upvoteMeme(@PathVariable Long id, @PathVariable String username) {
         //        memeRepository.upvote(id);
         try {
-            postService.upvoteMeme(id, username);
+            boolean upvoteCasted = postService.upvoteMeme(id, username);
+            return upvoteCasted ? 
+                new ResponseEntity<>(new PostResponse("ok"), HttpStatus.OK):
+                new ResponseEntity<>(new PostResponse("duplicate"), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(new PostResponse("Error al votar usuario"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<>(new PostResponse("ok"), HttpStatus.OK);
     }
 }

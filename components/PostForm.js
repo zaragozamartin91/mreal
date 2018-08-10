@@ -80,7 +80,7 @@ const PostForm = React.createClass({
 
                     <div className="form-group">
                         <label htmlFor="description"
-                               value={this.state.description}>Titulo</label>
+                               value={this.state.description}>Descripcion</label>
                         <input
                             type="text"
                             className="form-control"

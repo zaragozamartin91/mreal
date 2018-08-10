@@ -45,9 +45,11 @@ const Home = React.createClass({
 
             axios.post(url).then(response => {
                 console.log("response.data: " + JSON.stringify(response.data));
-                const meme = self.state.memes.find(m => m.id === id);
-                meme.upvotes = meme.upvotes + 1;
-                self.setState({memes: self.state.memes});
+                if(response.data.message === "ok") {
+                    const meme = self.state.memes.find(m => m.id === id);
+                    meme.upvotes = meme.upvotes + 1;
+                    self.setState({memes: self.state.memes});
+                }
             }).catch(error => {
                 if (error.response) self.setState({message: error.response.data.message});
                 else self.setState({message: error.message});
