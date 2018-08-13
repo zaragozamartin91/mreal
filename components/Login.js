@@ -28,6 +28,7 @@ const LoginPage = React.createClass({
         axios.post('login', {username, password})
             .then(response => {
                 console.log("LoginPage response.data: " + JSON.stringify(response.data));
+                this.disableFullScreen();
                 this.props.loginSuccess(response.data);
             })
             .catch(error => {
@@ -37,6 +38,8 @@ const LoginPage = React.createClass({
     },
 
     render() {
+        this.enableFullScreen();
+
         return (
             <div>
                 <div className={"container"}>
@@ -65,6 +68,31 @@ const LoginPage = React.createClass({
                 </div>
             </div>
         );
+    },
+
+    enableFullScreen() {
+        document.querySelector("html").style.width = "100%";
+        document.querySelector("html").style.height = "100%";
+
+        let bodyStyle = document.querySelector("body").style;
+        bodyStyle.width = "100%";
+        bodyStyle.height = "100%";
+        bodyStyle.display = "flex";
+        bodyStyle.justifyContent = "center";
+        bodyStyle.alignItems = "center";
+    },
+
+    disableFullScreen() {
+        let htmlElem = document.querySelector("html");
+        htmlElem.style.width = "";
+        htmlElem.style.height = "";
+
+        let bodyStyle = document.querySelector("body").style;
+        bodyStyle.width = "";
+        bodyStyle.height = "";
+        bodyStyle.display = "";
+        bodyStyle.justifyContent = "";
+        bodyStyle.alignItems = "";
     }
 });
 
