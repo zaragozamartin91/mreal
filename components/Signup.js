@@ -4,14 +4,13 @@ import React from 'react';
 const axios = require('axios');
 
 const EMPTY_LAMBDA = () => {
-    console.log("NO SE ASIGNO UNA FUNCION")
+    console.log("NO SE ASIGNO UNA FUNCION PARA MANEJAR LA CREACION DE USUARIO")
 };
 
-const LoginPage = React.createClass({
+const SignupPage = React.createClass({
     getDefaultProps() {
         return {
-            loginSuccess: EMPTY_LAMBDA,
-            onSignupClick: EMPTY_LAMBDA
+            signupSuccess: EMPTY_LAMBDA
         }
     },
 
@@ -19,6 +18,7 @@ const LoginPage = React.createClass({
         return {
             username: '',
             password: '',
+            repeatPassword: '',
             message: ''
         }
     },
@@ -26,11 +26,11 @@ const LoginPage = React.createClass({
     submitForm(event) {
         event.preventDefault();
         const {username, password} = this.state;
-        axios.post('login', {username, password})
+        axios.post('/api/signup', {username, password})
             .then(response => {
-                console.log("LoginPage response.data: " + JSON.stringify(response.data));
+                console.log("SignupPage response.data: " + JSON.stringify(response.data));
                 this.disableFullScreen();
-                this.props.loginSuccess(response.data);
+                this.props.signupSuccess(response.data);
             })
             .catch(error => {
                 if (error.response) this.setState({message: error.response.data.message});
@@ -44,7 +44,7 @@ const LoginPage = React.createClass({
         return (
             <div>
                 <div className={"container"}>
-                    <h1>Iniciar sesion</h1>
+                    <h1>Crear usuario</h1>
 
                     <p className="bg-danger">{this.state.message}</p>
 
@@ -64,25 +64,15 @@ const LoginPage = React.createClass({
                                    onChange={event => this.setState({password: event.target.value})}/>
                         </div>
 
+                        <div className="form-group">
+                            <label htmlFor="exampleInputPassword2">Repetir password</label>
+                            <input type="password" className="form-control" id="exampleInputPassword2" name={"repeatPassword"}
+                                   placeholder="Repetir password" value={this.state.repeatPassword}
+                                   onChange={event => this.setState({repeatPassword: event.target.value})}/>
+                        </div>
+
+                        <button onClick={this.submitForm} className="btn btn-primary">Crear usuario</button>
                     </form>
-
-                    <div className="row">
-                        <div className={"col-sm-12 col-md-5"}>
-                            <button
-                                onClick={this.submitForm}
-                                className="btn btn-primary">Iniciar sesion
-                            </button>
-                        </div>
-
-                        <div className={"col-sm-12 col-md-1"} />
-
-                        <div className={"col-sm-12 col-md-5"}>
-                            <button
-                                onClick={this.props.onSignupClick}
-                                className="btn btn-success">Crear usuario
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </div>
         );
@@ -114,4 +104,4 @@ const LoginPage = React.createClass({
     }
 });
 
-export default LoginPage;
+export default SignupPage;

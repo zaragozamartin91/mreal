@@ -2,6 +2,7 @@ import React from 'react'
 import Navigator from './Navigator'
 import Main from './Main'
 import LoginPage from './Login'
+import SignupPage from './Signup'
 
 console.log('Parseando cookie ' + document.cookie);
 const cookie = document.cookie || '';
@@ -14,7 +15,7 @@ const cookieUsername = cookieUsernameStr ? cookieUsernameStr.replace('username='
 
 const App = React.createClass({
     getInitialState() {
-        return {token: null, username: null, renderReady: false}
+        return {token: null, username: null, renderReady: false, signup: false}
     },
 
     componentDidMount() {
@@ -33,22 +34,25 @@ const App = React.createClass({
     render() {
         console.log("Renderizando App");
 
-        if (this.state.renderReady) {
-            const token = this.state.token;
-            const username = this.state.username;
+        if (!this.state.renderReady) return <p className="primary">Espere...</p>;
 
-            if (token) {
-                return (
-                    <div>
-                        <Navigator/>
-                        <Main token={token} username={username}/>
-                    </div>);
-            } else {
-                return <LoginPage loginSuccess={this.loginSuccess}/>
-            }
-        } else {
-            return <p className="primary">Espere...</p>
-        }
+
+        const token = this.state.token;
+        const username = this.state.username;
+
+        if (token) return (
+            <div>
+                <Navigator/>
+                <Main token={token} username={username}/>
+            </div>
+        );
+
+        if(this.state.signup) return <SignupPage
+            signupSuccess={() => this.setState({signup:false})}/>;
+
+        return <LoginPage
+                loginSuccess={this.loginSuccess}
+                onSignupClick={() => this.setState({signup:true})} />;
     }
 });
 
