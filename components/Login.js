@@ -43,12 +43,17 @@ const LoginPage = React.createClass({
 
         return (
             <div>
-                <div className={"container"}>
-                    <h1>Iniciar sesion</h1>
+                <p className="bg-danger">{this.state.message}</p>
 
-                    <p className="bg-danger">{this.state.message}</p>
+                <div style={{
+                    display: "grid",
+                    gridTemplateRows: "1fr 1fr 1fr 1fr",
+                    gridTemplateColumns: "1fr 1fr"
+                }}>
 
-                    <form>
+                    <h1 style={{gridColumn: "1 / span 2", gridRow: "1"}}>Iniciar sesion</h1>
+
+                    <form style={{gridColumn: "1 / span 2", gridRow: "2 / span 2"}}>
                         <div className="form-group">
                             <label htmlFor="exampleInputEmail1">Username</label>
                             <input type="email" className="form-control" id="exampleInputEmail1" name={"username"}
@@ -63,26 +68,17 @@ const LoginPage = React.createClass({
                                    placeholder="Password" value={this.state.password}
                                    onChange={event => this.setState({password: event.target.value})}/>
                         </div>
-
                     </form>
 
-                    <div className="row">
-                        <div className={"col-sm-12 col-md-5"}>
-                            <button
-                                onClick={this.submitForm}
-                                className="btn btn-primary">Iniciar sesion
-                            </button>
-                        </div>
+                    <button style={{gridRow: "4", gridColumn: "1"}}
+                            onClick={this.submitForm}
+                            className="btn btn-primary">Iniciar sesion
+                    </button>
 
-                        <div className={"col-sm-12 col-md-1"} />
-
-                        <div className={"col-sm-12 col-md-5"}>
-                            <button
-                                onClick={this.props.onSignupClick}
-                                className="btn btn-success">Crear usuario
-                            </button>
-                        </div>
-                    </div>
+                    <button style={{gridRow: "4", gridColumn: "2"}}
+                            onClick={this.props.onSignupClick}
+                            className="btn btn-success">Crear usuario
+                    </button>
                 </div>
             </div>
         );
