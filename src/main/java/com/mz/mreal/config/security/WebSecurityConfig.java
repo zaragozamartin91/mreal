@@ -59,14 +59,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         /* Pido a spring security que ignore los requests a recursos estaticos */
-        web
-                .ignoring()
-                .antMatchers("/resources/**")
-                .antMatchers("/static/**")
-                .antMatchers("/js/**")
-                .antMatchers("/css/**")
-                .antMatchers("/scss/**")
-                .antMatchers("/img/**");
+        web.ignoring()
+                .antMatchers("/resources/**", "/static/**", "/js/**", "/css/**", "/scss/**", "/img/**")
+
+                // /swagger-resources/configuration/security
+                // /swagger-resources/configuration/ui
+                .antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/security", "/swagger-ui.html", "/webjars/**");
     }
 
     @Override
@@ -84,8 +82,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/signup").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/app").permitAll()
-                // temporal para permitir agregado de usuarios
                 .antMatchers("/api/signup").permitAll()
+
                 .anyRequest().authenticated();
 
         // Custom JWT based security filter
