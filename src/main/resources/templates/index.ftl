@@ -15,6 +15,7 @@
     <script src="js/bootstrap.bundle.min.js"></script>
 
     <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/login.css"/>
 
     <title>mreal</title>
 </head>

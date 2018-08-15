@@ -44,20 +44,14 @@ const LoginPage = React.createClass({
         return (
             <div>
 
-                <div style={{
-                    display: "grid",
-                    gridTemplateRows: "1fr 1fr 1fr 0.5fr 1fr 1fr 1fr 1fr 1fr 1fr",
-                    gridTemplateColumns: "1fr 1fr",
-                    alignItems: "center"
-                }}>
+                <div id={"login-container"}>
 
-                    <h1 style={{gridColumn: "1 / span 2", gridRow: "1 / 4"}}>Iniciar sesion</h1>
+                    <h1>Iniciar sesion</h1>
 
-                    <p className="text-danger" style={{gridColumn: "1 / span 2", gridRow: "4"}}>
-                        {this.state.message}</p>
+                    <p className="text-danger">{this.state.message}</p>
 
 
-                    <form style={{gridColumn: "1 / span 2", gridRow: "5 / 10"}}>
+                    <form>
                         <div className="form-group">
                             <label htmlFor="exampleInputEmail1">Username</label>
                             <input type="email" className="form-control" id="exampleInputEmail1" name={"username"}
@@ -74,14 +68,12 @@ const LoginPage = React.createClass({
                         </div>
                     </form>
 
-                    <button style={{gridRow: "auto", gridColumn: "1"}}
-                            onClick={this.submitForm}
-                            className="btn btn-primary">Iniciar sesion
+                    <button onClick={this.submitForm}
+                            className="btn btn-primary btn1">Iniciar sesion
                     </button>
 
-                    <button style={{gridRow: "auto", gridColumn: "2" , marginLeft:"5px"}}
-                            onClick={this.props.onSignupClick}
-                            className="btn btn-success">Crear usuario
+                    <button onClick={this.props.onSignupClick}
+                            className="btn btn-success btn2">Crear usuario
                     </button>
                 </div>
             </div>
