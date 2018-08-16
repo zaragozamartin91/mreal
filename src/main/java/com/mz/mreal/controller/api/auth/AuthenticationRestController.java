@@ -1,10 +1,9 @@
-package com.mz.mreal.controller.auth;
+package com.mz.mreal.controller.api.auth;
 
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 
 import com.mz.mreal.util.jwt.JwtTokenUtil;
-import com.mz.mreal.config.security.JwtUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,17 +15,15 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@RequestMapping("/api")
 public class AuthenticationRestController {
 
-    @Value("${jwt.header}")
+    @Value("Authorization")
     private String tokenHeader;
 
     private final AuthenticationManager authenticationManager;
@@ -42,7 +39,7 @@ public class AuthenticationRestController {
         this.userDetailsService = userDetailsService;
     }
 
-    @RequestMapping(value = "${jwt.routeAuthenticationPath}", method = RequestMethod.POST)
+    @PostMapping(path = "/auth")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
 
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
@@ -55,18 +52,18 @@ public class AuthenticationRestController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(token));
     }
 
-    @RequestMapping(value = "${jwt.routeAuthenticationRefresh}", method = RequestMethod.GET)
+    @PostMapping(path = "/refresh")
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
         String authToken = request.getHeader(tokenHeader);
         final String token = authToken.substring(7);
         String username = jwtTokenUtil.getUsernameFromToken(token);
-        JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
+        userDetailsService.loadUserByUsername(username);
 
         String refreshedToken = jwtTokenUtil.refreshToken(token);
         return ResponseEntity.ok(new JwtAuthenticationResponse(refreshedToken));
     }
 
-    @ExceptionHandler({AuthenticationException.class})
+    @ExceptionHandler({AuthenticationException.class, UsernameNotFoundException.class})
     public ResponseEntity<String> handleAuthenticationException(AuthenticationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }

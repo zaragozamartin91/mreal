@@ -1,4 +1,4 @@
-package com.mz.mreal.controller.auth;
+package com.mz.mreal.controller.api.auth;
 
 import java.io.Serializable;
 

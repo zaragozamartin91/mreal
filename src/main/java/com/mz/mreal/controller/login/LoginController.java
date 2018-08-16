@@ -1,6 +1,5 @@
 package com.mz.mreal.controller.login;
 
-import com.mz.mreal.controller.auth.JwtAuthenticationResponse;
 import com.mz.mreal.util.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
