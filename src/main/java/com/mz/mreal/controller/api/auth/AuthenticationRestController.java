@@ -7,6 +7,7 @@ import com.mz.mreal.util.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,9 +22,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@PropertySource("classpath:jwt.properties")
 public class AuthenticationRestController {
 
-    @Value("Authorization")
+    @Value("${jwt.header}")
     private String tokenHeader;
 
     private final AuthenticationManager authenticationManager;

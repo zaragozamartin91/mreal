@@ -17,13 +17,6 @@ spring:
       max-request-size: 10Mb
 
 
-jwt:
-  header: Authorization
-  secret: mySecret
-  expiration: 604800
-  routeAuthenticationPath: /auth
-  routeAuthenticationRefresh: /refresh
-
 server:
   port: 9090
 

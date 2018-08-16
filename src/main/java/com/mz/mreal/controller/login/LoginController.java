@@ -4,6 +4,7 @@ import com.mz.mreal.util.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +16,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping(path = "/login")
+@PropertySource("classpath:jwt.properties")
 public class LoginController {
     private final UserDetailsService userDetailsService;
     private final JwtTokenUtil jwtTokenUtil;
