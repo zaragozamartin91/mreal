@@ -57,7 +57,7 @@ public class AuthenticationRestController {
     @PostMapping(path = "/refresh")
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
         String authToken = request.getHeader(tokenHeader);
-        final String token = authToken.substring(7);
+        final String token = authToken.substring("Bearer ".length());
         String username = jwtTokenUtil.getUsernameFromToken(token);
         userDetailsService.loadUserByUsername(username);
 

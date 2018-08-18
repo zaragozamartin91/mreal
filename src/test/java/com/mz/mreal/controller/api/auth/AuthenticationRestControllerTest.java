@@ -1,15 +1,21 @@
 package com.mz.mreal.controller.api.auth;
 
+import com.mz.mreal.config.security.JwtUserDetailsService;
 import com.mz.mreal.model.RealityKeeper;
 import com.mz.mreal.service.RealityKeeperService;
 import com.mz.mreal.util.json.JsonMapper;
+import com.mz.mreal.util.jwt.JwtTokenUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,7 +31,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles(profiles = "test")
+@PropertySource("classpath:jwt.properties")
 public class AuthenticationRestControllerTest {
+    @Value("${jwt.header}")
+    private String tokenHeader;
+
     @Autowired
     private WebApplicationContext webApplicationContext;
 
@@ -36,6 +46,13 @@ public class AuthenticationRestControllerTest {
 
     @Autowired
     private JsonMapper jsonMapper;
+
+    @Autowired
+    @Qualifier("jwtUserDetailsService")
+    private JwtUserDetailsService jwtUserDetailsService;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     private String username = "foo";
     private String password = "password";
@@ -90,6 +107,15 @@ public class AuthenticationRestControllerTest {
     }
 
     @Test
-    public void refreshAndGetAuthenticationToken() {
+    public void refreshAndGetAuthenticationToken() throws Exception {
+        UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(testUser.getUsername());
+        String token = jwtTokenUtil.generateToken(userDetails);
+        String authorizationHeaderValue = "Bearer " + token;
+
+        mockMvc.perform(post("/api/refresh")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(tokenHeader, authorizationHeaderValue))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
     }
 }
